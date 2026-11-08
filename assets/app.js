@@ -78,3 +78,51 @@ document.querySelectorAll('.report-link[data-report]').forEach(link => {
     openPresetReport(link.dataset.report);
   });
 });
+
+// Report Library Click Test
+document.addEventListener('click', function (event) {
+    const item = event.target.closest('a, button');
+
+    if (!item) return;
+
+    const reportNames = [
+        'Sales summary',
+        'Orders report',
+        'Sales by product',
+        'Sales by variant',
+        'Discount code performance',
+        'Inventory on hand',
+        'Low stock products',
+        'Inventory by location',
+        'Best selling products',
+        'Never sold products',
+        'Customer lifetime value',
+        'Repeat customers',
+        'New customers',
+        'Customer orders',
+        'Customers by location',
+        'Profit summary',
+        'Refund report',
+        'Payment methods',
+        'Taxes report',
+        'Expenses report'
+    ];
+
+    const reportName = item.textContent.trim();
+
+    if (!reportNames.includes(reportName)) return;
+
+    event.preventDefault();
+
+    const reportInput = document.getElementById('report-name');
+
+    if (typeof showPage === 'function') {
+        showPage('builder');
+    }
+
+    if (reportInput) {
+        reportInput.value = reportName;
+    }
+
+    console.log('Selected Report:', reportName);
+});
