@@ -22,3 +22,59 @@ function changeStore(key){const note=document.getElementById('currency-context-n
 }
 const builderStore=document.getElementById('builder-store-select');if(builderStore)builderStore.addEventListener('change',()=>{const top=document.getElementById('global-store-select');if(top)top.value=builderStore.value;changeStore(builderStore.value)});
 if(location.hash&&document.getElementById(location.hash.slice(1)))showPage(location.hash.slice(1));const initial=document.getElementById('global-store-select');changeStore(initial?initial.value:'all');
+
+
+// Ready-made Report Library actions: open the designer with a sensible field preset.
+const reportPresets = {
+  'Sales summary': ['Order date','Order name','Gross sales','Discounts','Refunds','Net sales','Taxes','Total sales'],
+  'Orders report': ['Order name','Order date','Customer name','Financial status','Fulfillment status','Total sales'],
+  'Sales by product': ['Product title','SKU','Quantity sold','Gross sales','Net sales'],
+  'Sales by variant': ['Product title','Variant title','SKU','Quantity sold','Net sales'],
+  'Discount code performance': ['Discount code','Orders','Discount amount','Net sales'],
+  'Inventory on hand': ['Product title','SKU','Variant title','Available quantity','Committed quantity','Location'],
+  'Low stock products': ['Product title','SKU','Available quantity','Reorder threshold','Location'],
+  'Inventory by location': ['Location','Product title','SKU','Available quantity'],
+  'Best selling products': ['Product title','SKU','Quantity sold','Net sales'],
+  'Never sold products': ['Product title','SKU','Created at','Available quantity'],
+  'Customer lifetime value': ['Customer name','Customer email','Orders count (lifetime)','Total spent (lifetime)','First order date','Last order date'],
+  'Repeat customers': ['Customer name','Customer email','Orders count (lifetime)','Total spent (lifetime)'],
+  'New customers': ['Customer name','Customer email','Created at','First order date'],
+  'Customer orders': ['Customer name','Customer email','Order name','Order date','Total sales'],
+  'Customers by location': ['Customer name','City','Province/State','Country','Orders count (lifetime)'],
+  'Profit summary': ['Gross sales','Discounts','Refunds','Net sales','COGS','Shipping expense','Gateway fees','Gross profit','Net profit'],
+  'Refund report': ['Order name','Refund date','Customer name','Refund amount','Reason'],
+  'Payment methods': ['Payment gateway','Orders','Gross sales','Gateway fees','Net payout'],
+  'Taxes report': ['Order name','Order date','Tax name','Tax rate','Tax amount','Country/Region'],
+  'Expenses report': ['Expense date','Expense category','Description','Amount','Store']
+};
+function openPresetReport(reportName) {
+  const fields = reportPresets[reportName] || ['Order date','Order name','Customer name','Total sales'];
+  const heading = document.getElementById('designer-heading');
+  const description = document.getElementById('designer-description');
+  const nameInput = document.getElementById('report-name');
+  const selected = document.getElementById('selected-columns');
+  if (heading) heading.textContent = reportName + ' — Report Designer';
+  if (description) description.textContent = 'Customize columns, filters, sorting and date range for ' + reportName + '.';
+  if (nameInput) nameInput.value = reportName;
+  if (selected) {
+    selected.innerHTML = '';
+    fields.forEach(field => {
+      const chip = document.createElement('div');
+      chip.className = 'column-chip';
+      chip.append(document.createTextNode(field + ' '));
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.textContent = '×';
+      remove.setAttribute('aria-label', 'Remove ' + field);
+      remove.addEventListener('click', () => chip.remove());
+      chip.appendChild(remove); selected.appendChild(chip);
+    });
+  }
+  showPage('builder');
+  toast('Opened ' + reportName + ' in Report Designer');
+}
+document.querySelectorAll('.report-link[data-report]').forEach(link => {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    openPresetReport(link.dataset.report);
+  });
+});

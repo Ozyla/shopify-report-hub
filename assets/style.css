@@ -41,3 +41,5 @@ body.all-stores-view .currency-context-note{display:none}
 
 /* Store-specific dashboard demo updates */
 .kpi strong{overflow-wrap:anywhere}.currency-store-card strong{overflow-wrap:anywhere}
+
+.report-categories a.report-link{display:block;cursor:pointer;padding:2px 0}.report-categories a.report-link:hover{text-decoration:underline;color:#245bb8}.report-categories a.report-link:focus{outline:2px solid #3978e8;outline-offset:3px;border-radius:3px}
